@@ -1,25 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+
+import {
+  AppContextProvider,
+  useAppContextSubscriber,
+} from "./modules/app/AppContext";
+import { AppLoader, LoadingProcess } from "./modules/loader/AppLoader";
+import { AppRouter } from "./modules/navigation/AppRouter";
+import { LoadingScreen } from "./modules/ui";
+import { TopBar } from "./modules/ui/components/TopBar";
+import { AppThemeProvider, GlobalStyle } from "./modules/ui/theme";
 
 function App() {
+  const appContext = useAppContextSubscriber();
+
+  const mandatoryProcesses: LoadingProcess[] = [
+    { name: "peer", isReady: appContext?.peer ? true : false },
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppThemeProvider>
+      <AppLoader
+        loadingComponent={<LoadingScreen />}
+        mandatoryProcesses={mandatoryProcesses}
+      >
+        <AppContextProvider value={appContext}>
+          <TopBar />
+          <AppRouter />
+        </AppContextProvider>
+      </AppLoader>
+      <GlobalStyle />
+    </AppThemeProvider>
   );
 }
 
