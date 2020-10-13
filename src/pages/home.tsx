@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 
 type form = {
   id: string;
+  message: string;
 };
 
 export const Home = () => {
@@ -13,8 +14,8 @@ export const Home = () => {
 
   const onSubmit = (values: form) => {
     const conn = peer.connect(values.id);
-    conn?.on("open", () => {
-      conn.send("hi!");
+    conn.on("open", () => {
+      conn.send(values.message);
     });
   };
 

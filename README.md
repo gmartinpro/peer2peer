@@ -16,6 +16,12 @@
 
 ## Run
 
+First run docker peer server:
+
+```bash
+yarn docker
+```
+
 With yarn
 
 ```bash
