@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../modules/app/AppContext";
 import { Layout } from "../modules/ui/components/Layout";
 import { useForm } from "react-hook-form";
+import Peer from "peerjs";
 
 type form = {
   id: string;
@@ -12,6 +13,7 @@ export const Home = () => {
   const { peer } = useAppContext();
   const { handleSubmit, register } = useForm<form>();
   const video = useRef<HTMLVideoElement>();
+  const [connection, setConnection] = useState<Peer.MediaConnection>();
 
   const onSubmit = async (values: form) => {
     const conn = peer.connect(values.id);
@@ -25,9 +27,24 @@ export const Home = () => {
     });
     const call = peer.call(values.id, media);
     call.on("stream", (remoteStream) => {
-      console.log({ remoteStream });
       video.current!.srcObject = new MediaStream(remoteStream.getVideoTracks());
     });
+    setConnection(call);
+  };
+
+  useEffect(() => {
+    peer.on("call", (call) => {
+      call.on("stream", (remoteStream) => {
+        video.current!.srcObject = new MediaStream(
+          remoteStream.getVideoTracks()
+        );
+      });
+      call.on("close", () => console.log("close"));
+    });
+  }, [peer]);
+
+  const handleDisconnect = () => {
+    connection?.close();
   };
 
   return (
@@ -37,8 +54,9 @@ export const Home = () => {
         <input name="id" id="id" ref={register} type="text" />
         <input name="message" id="message" ref={register} type="text" />
         <button>Envoyer</button>
-        <video ref={(ref) => (video.current = ref!)} autoPlay />
       </form>
+      Lui: <video ref={(ref) => (video.current = ref!)} autoPlay />
+      <button onClick={handleDisconnect}>Déconnecté</button>
     </Layout>
   );
 };
