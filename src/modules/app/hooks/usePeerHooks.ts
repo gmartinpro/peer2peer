@@ -18,16 +18,7 @@ export function usePeerHooks(): usePeerHooksType {
   const [peer] = useState<Peer>(myPeer);
 
   useEffect(() => {
-    peer.on("connection", (conn) => {
-      conn.on("data", (data) => {
-        // Will print 'hi!'
-        console.log(data);
-      });
-    });
-
     peer.on("error", (error) => console.log(error));
-
-    console.log(peer);
 
     peer.on("call", async (call) => {
       const media = await navigator.mediaDevices.getUserMedia({
