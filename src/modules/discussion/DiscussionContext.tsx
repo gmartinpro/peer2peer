@@ -1,16 +1,14 @@
 import React, { createContext, useContext } from "react";
 
 import { useDiscussionHooksType, useDiscussion } from "./hooks/useDiscussion";
-import {
-  useListenDiscussion,
-  useListenDiscussionType,
-} from "./hooks/useListenDiscussion";
+import { useVideoCall, useVideoCallType } from "./hooks/useVideoCall";
 
 export type InitializeDiscussionContext =
-  | (useDiscussionHooksType & useListenDiscussionType)
+  | (useDiscussionHooksType & useVideoCallType)
   | null;
 
-export type InitializedDiscussionContext = useDiscussionHooksType;
+export type InitializedDiscussionContext = useDiscussionHooksType &
+  useVideoCallType;
 
 // Create context
 const DiscussionContext = createContext<InitializeDiscussionContext>(null);
@@ -32,7 +30,7 @@ export function useDiscussionContext(): InitializedDiscussionContext {
 
 export function useDiscussionContextSubscriber(): InitializeDiscussionContext {
   const discussion = useDiscussion();
-  const listener = useListenDiscussion();
+  const videoCall = useVideoCall();
 
-  return { ...discussion, ...listener };
+  return { ...discussion, ...videoCall };
 }

@@ -20,15 +20,6 @@ export function usePeerHooks(): usePeerHooksType {
   useEffect(() => {
     peer.on("error", (error) => console.log(error));
 
-    peer.on("call", async (call) => {
-      const media = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-
-      call.answer(media); // Answer the call with an A/V stream.
-    });
-
     return () => peer.destroy();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
