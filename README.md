@@ -1,4 +1,4 @@
-# Epsi I3 Peer Projet
+# Epsi I4Grp3 Peer Projet
 
 Our project is able to send message and have a video call with somebody in `peer to peer`.
 
